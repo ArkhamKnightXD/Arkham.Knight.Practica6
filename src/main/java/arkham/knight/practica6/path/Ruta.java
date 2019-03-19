@@ -7,6 +7,7 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.Version;
 import org.jasypt.util.text.StrongTextEncryptor;
+import org.javatuples.Pair;
 import spark.Session;
 import java.io.StringWriter;
 import java.util.*;
@@ -24,6 +25,9 @@ public class Ruta {
         configuration.setClassForTemplateLoading(Main.class, "/");
 
         staticFiles.location("/publico");
+
+        webSocket("/chat", WebSocketService.class);
+        init();
 
         before("/", (req, res) -> {
             if (req.cookie("sesionSemanal") != null) {
@@ -136,6 +140,27 @@ public class Ruta {
             }
         });
 
+        before("/super-chat/:usuario", (req, res) -> {
+            if (req.cookie("sesionSemanal") != null) {
+                Usuario usuarioRestaurado = restaurarSesion(req.cookie("sesionSemanal"));
+
+                if (usuarioRestaurado != null) {
+                    req.session(true);
+                    req.session().attribute("sesionUsuario", usuarioRestaurado);
+                }
+            }
+
+            if (req.session().attribute("sesionUsuario") == null) {
+                res.redirect("/");
+            }
+
+            if (!usuario.isAdminstrator()) {
+                if (!usuario.isAutor()) {
+                    res.redirect("/");
+                }
+            }
+        });
+
         before("/inicio", (req, res) -> {
             if (req.cookie("sesionSemanal") != null) {
                 Usuario usuarioRestaurado = restaurarSesion(req.cookie("sesionSemanal"));
@@ -193,21 +218,34 @@ public class Ruta {
         });
 
         get("/", (req, res) -> {
-            res.redirect("/inicio/1");
+            res.redirect("/inicio");
 
             return null;
         });
 
         get("/inicio", (req, res) -> {
-            res.redirect("/inicio/1");
+            StringWriter writer = new StringWriter();
+            Map<String, Object> atributos = new HashMap<>();
+            Template template = configuration.getTemplate("plantillas/index.ftl");
 
-            return null;
+            List<Usuario> usuariosPrivilegiados = UsuarioService.getInstancia().encontrarUsuariosConPrivilegios();
+
+            atributos.put("listaUsuariosPrivilegiados", usuariosPrivilegiados);
+            atributos.put("articulos", articulos);
+            atributos.put("estaLogueado", req.session().attribute("sesionUsuario") != null);
+            atributos.put("nombreUsuario", nombreUsuario);
+            atributos.put("tienePermisos", usuario.isAdminstrator() || usuario.isAutor());
+            atributos.put("esAdmin", usuario.isAdminstrator());
+
+            template.process(atributos, writer);
+
+            return writer;
         });
 
         get("/inicio/:pagina", (req, res) -> {
             StringWriter writer = new StringWriter();
             Map<String, Object> atributos = new HashMap<>();
-            Template template = configuration.getTemplate("plantillas/index.ftl");
+            Template template = configuration.getTemplate("plantillas/paginacion.ftl");
 
             int pagina = Integer.parseInt(req.params("pagina"));
 
@@ -231,6 +269,10 @@ public class Ruta {
             StringWriter writer = new StringWriter();
             Map<String, Object> atributos = new HashMap<>();
             Template template = configuration.getTemplate("plantillas/login.ftl");
+
+            List<Usuario> usuariosPrivilegiados = UsuarioService.getInstancia().encontrarUsuariosConPrivilegios();
+            atributos.put("listaUsuariosPrivilegiados", usuariosPrivilegiados);
+
             template.process(atributos, writer);
 
             return writer;
@@ -465,7 +507,9 @@ public class Ruta {
                     comentario.setMeDisgusta(ValoracionService.getInstancia().encontrarValoracionesPorComentario(comentario.getId(), "Me disgusta"));
                     comentario.setMeIndigna(ValoracionService.getInstancia().encontrarValoracionesPorComentario(comentario.getId(), "Me indigna"));
                 }
+                List<Usuario> usuariosPrivilegiados = UsuarioService.getInstancia().encontrarUsuariosConPrivilegios();
 
+                atributos.put("listaUsuariosPrivilegiados", usuariosPrivilegiados);
                 atributos.put("articulo", articulo);
                 atributos.put("estaLogueado", req.session().attribute("sesionUsuario") != null);
                 atributos.put("nombreUsuario", nombreUsuario);
@@ -548,7 +592,6 @@ public class Ruta {
             });
         });
 
-
         get("/etiqueta/:id", (req, res) -> {
             StringWriter writer = new StringWriter();
             Map<String, Object> atributos = new HashMap<>();
@@ -577,6 +620,35 @@ public class Ruta {
             return writer;
         });
 
+        get("/super-chat/:usuario", (req, res) -> {
+            String nombreUsuario = req.params("usuario");
+
+            StringWriter writer = new StringWriter();
+            Map<String, Object> atributos = new HashMap<>();
+            Template template = configuration.getTemplate("plantillas/super-chat.ftl");
+
+            List<String> listaUsuariosActivos = new ArrayList<>();
+
+            for(Map.Entry<String, Pair<org.eclipse.jetty.websocket.api.Session, String>> usuarios : WebSocketService.usuariosConectados.entrySet()) {
+                if(usuarios.getKey().equals(nombreUsuario))
+                    continue;
+
+                if(!usuarios.getValue().getValue1().equals(nombreUsuario))
+                    continue;
+
+                listaUsuariosActivos.add(usuarios.getKey());
+            }
+
+            atributos.put("listaUsuariosActivos", listaUsuariosActivos);
+            atributos.put("estaLogueado", req.session().attribute("sesionUsuario") != null);
+            atributos.put("nombreUsuario", nombreUsuario);
+            atributos.put("tienePermisos", usuario.isAdminstrator() || usuario.isAutor());
+            atributos.put("esAdmin", usuario.isAdminstrator());
+
+            template.process(atributos, writer);
+
+            return writer;
+        });
 
         notFound((req, res) -> {
             StringWriter writer = new StringWriter();
@@ -593,7 +665,6 @@ public class Ruta {
 
             return writer;
         });
-
     }
 
     private static Usuario restaurarSesion(String cookie) {
