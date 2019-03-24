@@ -1,6 +1,6 @@
 <main class="row" id="chat">
     <aside class="col-3 p-0">
-        <h6><i class="fas fa-comments"></i> Masters</h6>
+        <h6><i class="fas fa-comments"></i> Web masters</h6>
         <ul class="list-group list-group-flush">
             <#list listaUsuariosPrivilegiados as usuario>
                 <li class="list-group-item chat">

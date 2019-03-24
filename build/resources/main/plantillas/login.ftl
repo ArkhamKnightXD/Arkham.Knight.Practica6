@@ -7,7 +7,7 @@
                 <form class="col-11 py-5" method="post" action="/login">
                     <div class="panel px-2 py-3 bg-white">
                         <label for="user"><strong>Username</strong> </label>
-                        <input type="text" class="form-control rounded-0" name="username" placeholder="username"
+                        <input type="text" class="form-control rounded-0" name="username" placeholder="usuario"
                                required=""
                                autofocus=""/>
                         <br>
@@ -18,15 +18,17 @@
                         <hr noshade>
                         <input class="form-check-input" type="radio" name="guardarSesion">
                         <label class="form-check-label" for="guardarSesion">
-                            <strong>Remember me</strong>
+                            <strong>Remember Me</strong>
                         </label>
                     </div>
-                    <button class="btn btn-outline-primary btn-block my-3" type="submit">
+                    <button class="btn btn-outline-primary btn-block mt-3" type="submit">
                         ACCEDER
                     </button>
                 </form>
+
             </div>
         </div>
     </div>
 </div>
+<#include "modal-chat-normal.ftl">
 </@base.pagina>

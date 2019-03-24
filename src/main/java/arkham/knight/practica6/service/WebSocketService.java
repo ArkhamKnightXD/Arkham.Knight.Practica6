@@ -6,11 +6,13 @@ import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
+import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.javatuples.Pair;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@WebSocket
 public class WebSocketService {
     public static Map<String, Pair<Session, String>> usuariosConectados = new HashMap<>();
 
