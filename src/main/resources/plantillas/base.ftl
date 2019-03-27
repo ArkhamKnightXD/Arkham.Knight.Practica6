@@ -87,6 +87,13 @@
                                             </a>
                                         </li>
                                     </#if>
+                                    <#if permisos>
+                                        <li class="nav-item">
+                                            <a class="btn btn-link text-light" href="/super-chat/${usuario}">
+                                                <i class="fas fa-comment-alt"></i> Super Chat
+                                            </a>
+                                        </li>
+                                    </#if>
                                 </ul>
                                 <img class="rounded boxed-shadow" src="/imagenes/perfil.jpg" alt="foto de usuario" width="80px" height="80">
                                 <a class="mx-2 nombre-usuario px-3 text-light"><strong>${usuario}</strong></a>

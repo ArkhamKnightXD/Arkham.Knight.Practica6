@@ -13,6 +13,7 @@ import java.io.StringWriter;
 import java.util.*;
 
 import static spark.Spark.*;
+import static spark.debug.DebugScreen.enableDebugScreen;
 
 public class Ruta {
 
@@ -25,6 +26,8 @@ public class Ruta {
         configuration.setClassForTemplateLoading(Main.class, "/");
 
         staticFiles.location("/publico");
+
+        enableDebugScreen();
 
         webSocket("/chat", WebSocketService.class);
         init();
