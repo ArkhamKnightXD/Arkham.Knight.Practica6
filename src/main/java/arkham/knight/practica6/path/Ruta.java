@@ -231,7 +231,7 @@ public class Ruta {
             Map<String, Object> atributos = new HashMap<>();
             Template template = configuration.getTemplate("plantillas/index.ftl");
 
-            List<Usuario> usuariosPrivilegiados = UsuarioService.getInstancia().encontrarUsuariosConPrivilegios();
+            List<Usuario> usuariosPrivilegiados = UsuarioService.getInstancia().encontrarUsuariosPrivilegiados();
 
             atributos.put("listaUsuariosPrivilegiados", usuariosPrivilegiados);
             atributos.put("articulos", articulos);
@@ -273,7 +273,7 @@ public class Ruta {
             Map<String, Object> atributos = new HashMap<>();
             Template template = configuration.getTemplate("plantillas/login.ftl");
 
-            List<Usuario> usuariosPrivilegiados = UsuarioService.getInstancia().encontrarUsuariosConPrivilegios();
+            List<Usuario> usuariosPrivilegiados = UsuarioService.getInstancia().encontrarUsuariosPrivilegiados();
             atributos.put("listaUsuariosPrivilegiados", usuariosPrivilegiados);
 
             template.process(atributos, writer);
@@ -510,7 +510,7 @@ public class Ruta {
                     comentario.setMeDisgusta(ValoracionService.getInstancia().encontrarValoracionesPorComentario(comentario.getId(), "Me disgusta"));
                     comentario.setMeIndigna(ValoracionService.getInstancia().encontrarValoracionesPorComentario(comentario.getId(), "Me indigna"));
                 }
-                List<Usuario> usuariosPrivilegiados = UsuarioService.getInstancia().encontrarUsuariosConPrivilegios();
+                List<Usuario> usuariosPrivilegiados = UsuarioService.getInstancia().encontrarUsuariosPrivilegiados();
 
                 atributos.put("listaUsuariosPrivilegiados", usuariosPrivilegiados);
                 atributos.put("articulo", articulo);

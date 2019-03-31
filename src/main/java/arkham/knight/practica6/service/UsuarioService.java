@@ -34,21 +34,6 @@ public class UsuarioService extends DataBaseService<Usuario>{
         }
     }
 
-
-    public List<Usuario> encontrarUsuariosConPrivilegios() {
-        EntityManager em = getEntityManager();
-
-        try {
-            Query query = em.createQuery("from Usuario user where user.administrator = true or user.autor = true");
-            return query.getResultList();
-        } catch (Exception ex) {
-            return null;
-        } finally {
-            em.close();
-        }
-    }
-
-
     public Object encontrarUsuario(String username, String password) {
         EntityManager em = getEntityManager();
 
@@ -64,4 +49,16 @@ public class UsuarioService extends DataBaseService<Usuario>{
         }
     }
 
+    public List<Usuario> encontrarUsuariosPrivilegiados() {
+        EntityManager em = getEntityManager();
+
+        try {
+            Query query = em.createQuery("from Usuario user where user.administrator = true or user.autor = true");
+            return query.getResultList();
+        } catch (Exception ex) {
+            return null;
+        } finally {
+            em.close();
+        }
+    }
 }

@@ -30,5 +30,4 @@
         </div>
     </div>
 </div>
-<#include "modal-chat-normal.ftl">
 </@base.pagina>
