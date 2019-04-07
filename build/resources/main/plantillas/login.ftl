@@ -7,7 +7,7 @@
                 <form class="col-11 py-5" method="post" action="/login">
                     <div class="panel px-2 py-3 bg-white">
                         <label for="user"><strong>Username</strong> </label>
-                        <input type="text" class="form-control rounded-0" name="username" placeholder="usuario"
+                        <input type="text" class="form-control rounded-0" name="username" placeholder="username"
                                required=""
                                autofocus=""/>
                         <br>

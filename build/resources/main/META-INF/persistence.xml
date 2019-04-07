@@ -5,14 +5,14 @@
              version="2.1">
     <persistence-unit name="ArkhamKnightPersistencia" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <class>arkham.knight.practica6.encapsulacion.Etiqueta</class>
-        <class>arkham.knight.practica6.encapsulacion.Articulo</class>
-        <class>arkham.knight.practica6.encapsulacion.Usuario</class>
-        <class>arkham.knight.practica6.encapsulacion.Comentario</class>
-        <class>arkham.knight.practica6.encapsulacion.Voto</class>
-        <class>arkham.knight.practica6.encapsulacion.Valoracion</class>
+        <class>arkham.knight.practica6.Modelos.Etiqueta</class>
+        <class>arkham.knight.practica6.Modelos.Articulo</class>
+        <class>arkham.knight.practica6.Modelos.Usuario</class>
+        <class>arkham.knight.practica6.Modelos.Comentario</class>
+        <class>arkham.knight.practica6.Modelos.Voto</class>
+        <class>arkham.knight.practica6.Modelos.Valoracion</class>
         <properties>
-            <property name="javax.persistence.jdbc.url" value="jdbc:h2:tcp://localhost/~/arkhamknightORM" />
+            <property name="javax.persistence.jdbc.url" value="jdbc:h2:tcp://localhost/~/arkhamorm" />
             <property name="javax.persistence.jdbc.driver" value="org.h2.Driver" />
             <property name="javax.persistence.jdbc.user" value="sa" />
             <property name="javax.persistence.jdbc.password" value="" />
